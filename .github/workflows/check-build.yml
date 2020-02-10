@@ -1,0 +1,14 @@
+name: Will it build?
+
+on:
+  push
+
+jobs:
+  check-api-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: |
+          docker build -t risotto-play-api -f Dockerfile .
+      - run: |
+          docker image rm risotto-play-api
