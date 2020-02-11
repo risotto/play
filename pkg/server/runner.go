@@ -60,7 +60,7 @@ func RunCode(b []byte) (*Response, error) {
 }
 
 func runRisotto(filename string) (*Response, error) {
-	cmd := exec.Command("/Users/jarjames/executables/rst", filename)
+	cmd := exec.Command("rst", filename)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return nil, err

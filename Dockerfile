@@ -20,20 +20,21 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o api cmd/play/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o api cmd/play/main.go
 
 
 ######## Start a new stage from scratch #######
-FROM alpine:latest  
-
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /root/
+FROM raphaelvigee/risotto:latest
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/api .
+RUN chmod +x ./api
 
 EXPOSE 4000
+
+ENV PATH="/:${PATH}"
+
+ENTRYPOINT [ ]
 
 # Command to run the executable
 CMD ["./api"] 
