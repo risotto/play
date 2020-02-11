@@ -16,6 +16,11 @@ type Response struct {
 	Status int    `json:"status"`
 }
 
+// ServerError is returned in the event of the server crapping itself
+type ServerError struct {
+	Error string `json:"error"`
+}
+
 // RunCode takes Risotto code as a string, then does the following:
 // Checks to see if it is in the cache already, if so, return the output from the cache
 // Saves the file as a temporary file (since there seems to be no other way of running it)
