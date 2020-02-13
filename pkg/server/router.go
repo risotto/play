@@ -4,11 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 // SetupRouter sets up the router
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	// Hello there
 	r.GET("/", func(c *gin.Context) {
