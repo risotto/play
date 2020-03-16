@@ -22,6 +22,7 @@ jobs:
         id: setcontext
       - uses: Azure/k8s-deploy@v1
         with:
+          namespace: 'jamesjarvis'
           manifests: |
             deployments/deployment-api.yml
             deployments/service-api.yml
