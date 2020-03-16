@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: risotto-play
+spec:
+  selector:
+    matchLabels:
+      app: risotto-play
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: risotto-play
+    spec:
+      containers:
+        - name: risotto-play
+          image: jjhaslanded/risotto-play
+          imagePullPolicy: Always
+          ports:
+            - name: listen-port
+              containerPort: 4000
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1
+              memory: 256Mi

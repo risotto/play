@@ -21,9 +21,11 @@ docker build -t risotto-play-api -f Dockerfile .
 Run the Dockerfile:
 
 ```bash
-docker run -p 4000:4000 risotto-play-api
+docker run -p 80:4000 risotto-play-api
 ```
 
 Or, just run the [hosted docker image](https://hub.docker.com/r/jjhaslanded/risotto-play):
 
-```bash run -p 80:4000 jjhaslanded/risotto-play:latest
+```bash
+docker run -p 80:4000 jjhaslanded/risotto-play:latest
+```
