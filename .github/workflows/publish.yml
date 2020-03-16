@@ -23,7 +23,7 @@ jobs:
       - uses: Azure/k8s-deploy@v1
         with:
           manifests: |
-            deployments/deployment-api.yaml
-            deployments/service-api.yaml
+            deployments/deployment-api.yml
+            deployments/service-api.yml
           images: "jjhaslanded/risotto-play:${{ steps.build.outputs.tags }}"
           kubectl-version: "latest"
