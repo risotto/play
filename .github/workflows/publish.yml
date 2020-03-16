@@ -26,5 +26,5 @@ jobs:
           manifests: |
             deployments/deployment-api.yml
             deployments/service-api.yml
-          images: "jjhaslanded/risotto-play:${{ steps.build.outputs.tag }}"
+          images: "${{ steps.build.outputs.tag }}"
           kubectl-version: "latest"
