@@ -92,8 +92,17 @@ func (s *Server) RunRisotto(filename string) *Response {
 			Output: "",
 			Status: -1,
 		}
-	case _ = <-done:
+	case err := <-done:
 		status := cmd.ProcessState.ExitCode()
+
+		if err != nil {
+			return &Response{
+				Errors: err.Error(),
+				Output: "",
+				Status: status,
+			}
+		}
+
 		return &Response{
 			Errors: stdErr.String(),
 			Output: stdOut.String(),
