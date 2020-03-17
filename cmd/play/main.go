@@ -12,6 +12,6 @@ func main() {
 	}
 
 	r := s.SetupRouter()
-	// Listen and serve router on port 80
+	// Listen and serve router on port 4000
 	r.Run(":4000")
 }
