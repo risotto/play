@@ -1,4 +1,4 @@
-name: Publish docker
+name: Publish image and Deploy
 
 on: push
 
@@ -6,6 +6,14 @@ jobs:
   publish-api:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
+      - run: |
+          docker build --target tester -t risotto-play-tester .
+      - id: run-tests
+        run: |
+          docker run risotto-play-tester
+      - run: |
+          docker image rm risotto-play-api-tester
       - uses: actions/checkout@master
       - id: build
         uses: jerray/publish-docker-action@master
@@ -15,6 +23,7 @@ jobs:
           registry: docker.io
           repository: jjhaslanded/risotto-play
           auto_tag: true
+          target: runner
       - uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig

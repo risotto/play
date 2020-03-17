@@ -6,6 +6,7 @@ FROM golang:1.13 as builder
 
 # Add Maintainer Info
 LABEL maintainer="James Jarvis <git@jamesjarvis.io>"
+ENV CGO_ENABLED 0
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -20,21 +21,17 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o api cmd/play/main.go
+RUN go build -o api cmd/play/main.go
 
+FROM builder as tester
 
-######## Start a new stage from scratch #######
-FROM raphaelvigee/risotto:latest
+COPY --from=raphaelvigee/risotto:latest /rst /usr/bin/rst
 
-# Copy the Pre-built binary file from the previous stage
+CMD [ "go", "test", "/app/..." ]
+
+FROM debian as runner
+
+COPY --from=raphaelvigee/risotto:latest /rst /usr/bin/rst
 COPY --from=builder /app/api .
-RUN chmod +x ./api
 
-EXPOSE 4000
-
-ENV PATH="/:${PATH}"
-
-ENTRYPOINT [ ]
-
-# Command to run the executable
 CMD ["./api"] 

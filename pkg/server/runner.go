@@ -36,28 +36,21 @@ type Server struct {
 // Then returns the output
 func (s *Server) RunCode(b []byte) (*Response, error) {
 
-	// TODO: Check if it is in the cache
-
-	// Create the filename
-	now := time.Now()
-	currentMilliseconds := getMillis(&now)
-	filename := fmt.Sprintf("/tmp/%v.rst", currentMilliseconds)
-
-	// Save to a file
-	if err := ioutil.WriteFile(filename, b, 0644); err != nil {
-		return nil, err
-	}
-
-	// Run the risotto file
-	response := s.RunRisotto(filename)
-
-	// Save to cache
-
-	// Delete the file
-	err := os.Remove(filename)
+	tmpfile, err := ioutil.TempFile("", "somecode")
 	if err != nil {
 		return nil, err
 	}
+
+	defer os.Remove(tmpfile.Name()) // clean up
+
+	if _, err := tmpfile.Write(b); err != nil {
+		return nil, err
+	}
+	if err := tmpfile.Close(); err != nil {
+		return nil, err
+	}
+
+	response := s.RunRisotto(tmpfile.Name())
 
 	return response, nil
 }
