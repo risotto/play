@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
           repository: jjhaslanded/risotto-play
-          tags: latest,${{ event.run_id }}
+          tags: latest,${{ github.run_id }}
           target: runner
       - uses: azure/k8s-set-context@v1
         with:
@@ -27,11 +27,11 @@ jobs:
           kubeconfig: ${{secrets.KUBECONFIG}} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
         id: setcontext
       - uses: Azure/k8s-deploy@v1
-        if: github.ref == 'master' # Only deploy from master branch
+        if: github.ref == 'refs/heads/master' # Only deploy from master branch
         with:
           namespace: 'jamesjarvis'
           manifests: |
             deployments/deployment-api.yml
             deployments/service-api.yml
-          images: "jjhaslanded/risotto-play:${{ event.run_id }}"
+          images: "jjhaslanded/risotto-play:${{ github.run_id }}"
           kubectl-version: "latest"

@@ -28,5 +28,5 @@ spec:
               cpu: 1
               memory: 256Mi
   strategy:
-    rollingUpdate:
-      maxUnavailable: 0
+    type: Recreate
+
