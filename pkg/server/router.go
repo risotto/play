@@ -3,12 +3,12 @@ package server
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 // SetupRouter sets up the router
-func SetupRouter() *gin.Engine {
+func (s *Server) SetupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
 
@@ -63,7 +63,7 @@ func SetupRouter() *gin.Engine {
 
 		// TODO: if the file is too damn big, refuse to process
 
-		response, err := RunCode(rawData)
+		response, err := s.RunCode(rawData)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ServerError{err.Error()})
 			return

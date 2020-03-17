@@ -11,14 +11,20 @@ import (
 
 // Response is the response from when a file is ran
 type Response struct {
-	Errors string `json:"errors"`
-	Output string `json:"output"`
-	Status int    `json:"status"`
+	Errors string    `json:"errors"`
+	Output string    `json:"output"`
+	Status int       `json:"status"`
+	Time   time.Time `json:"time"`
 }
 
 // ServerError is returned in the event of the server crapping itself
 type ServerError struct {
 	Error string `json:"error"`
+}
+
+// Server is the server config
+type Server struct {
+	Timeout time.Duration
 }
 
 // RunCode takes Risotto code as a string, then does the following:
@@ -28,7 +34,7 @@ type ServerError struct {
 // Then removes the local file
 // Then stores the output in the cache (in another goprocess to speed things up a little)
 // Then returns the output
-func RunCode(b []byte) (*Response, error) {
+func (c *Server) RunCode(b []byte) (*Response, error) {
 
 	// TODO: Check if it is in the cache
 
@@ -43,7 +49,7 @@ func RunCode(b []byte) (*Response, error) {
 	}
 
 	// Run the risotto file
-	response, err := runRisotto(filename)
+	response, err := c.RunRisotto(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -59,48 +65,43 @@ func RunCode(b []byte) (*Response, error) {
 	return response, nil
 }
 
-func runRisotto(filename string) (*Response, error) {
-	cmd := exec.Command("rst", filename)
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, err
-	}
+// RunRisotto runs risotto
+func (s *Server) RunRisotto(filename string) (*Response, error) {
+	var stdOut bytes.Buffer
+	var stdErr bytes.Buffer
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, err
-	}
+	cmd := exec.Command("rst", filename)
+	cmd.Stdout = &stdOut
+	cmd.Stderr = &stdErr
 
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}
 
-	bytesErr, err := ioutil.ReadAll(stderr)
-	if err != nil {
-		return nil, err
-	}
+	// Wait for the process to finish or kill it after a timeout (whichever happens first):
+	done := make(chan error, 1)
+	go func() {
+		done <- cmd.Wait()
+	}()
+	select {
+	case <-time.After(s.Timeout):
+		if err := cmd.Process.Kill(); err != nil {
+			return nil, err
+		}
 
-	bytesOut, err := ioutil.ReadAll(stdout)
-	if err != nil {
-		return nil, err
-	}
-
-	cmd.Wait() // We ignore the error for now
-
-	status := cmd.ProcessState.ExitCode()
-	if status == 0 {
 		return &Response{
-			Errors: bytes.NewBuffer(bytesErr).String(),
-			Output: bytes.NewBuffer(bytesOut).String(),
-			Status: cmd.ProcessState.ExitCode(),
+			Errors: fmt.Sprintf("Timeout limit of %v exceeded.\nCalm the hecc down pls I don't pay for a good cluster...", s.Timeout),
+			Output: "",
+			Status: -1,
+		}, nil
+	case _ = <-done:
+		status := cmd.ProcessState.ExitCode()
+		return &Response{
+			Errors: stdErr.String(),
+			Output: stdOut.String(),
+			Status: status,
 		}, nil
 	}
-
-	return &Response{
-		Errors: bytes.NewBuffer(bytesErr).String(),
-		Output: bytes.NewBuffer(bytesOut).String(),
-		Status: cmd.ProcessState.ExitCode(),
-	}, nil
 }
 
 func getMillis(t *time.Time) int64 {

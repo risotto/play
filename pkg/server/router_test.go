@@ -6,12 +6,23 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
+func SetupServer() *gin.Engine {
+	s := &Server{
+		Timeout: 5 * time.Second,
+	}
+
+	return s.SetupRouter()
+}
+
 func TestPingRoute(t *testing.T) {
-	router := SetupRouter()
+
+	router := SetupServer()
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/ping", nil)
@@ -22,9 +33,10 @@ func TestPingRoute(t *testing.T) {
 }
 
 func TestHelloWorld(t *testing.T) {
-	router := SetupRouter()
 
-	helloworld := "println(\"Hello, world!\")"
+	router := SetupServer()
+
+	helloworld := `println("Hello, world!")`
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(helloworld))
@@ -41,7 +53,7 @@ func TestHelloWorld(t *testing.T) {
 }
 
 func TestError(t *testing.T) {
-	router := SetupRouter()
+	router := SetupServer()
 
 	wtf := "wtf"
 
@@ -59,34 +71,34 @@ func TestError(t *testing.T) {
 	assert.NotEmpty(t, response.Errors)
 }
 
-// func TestFibonacci(t *testing.T) {
-// 	router := SetupRouter()
+func TestFibonacci(t *testing.T) {
+	router := SetupServer()
 
-// 	input := `
-// 	func fib(n int) int {
-// 		if n == 0 {
-// 		return 0
-// 		}
+	input := `
+	func fib(n int) int {
+		if n == 0 {
+		return 0
+		}
 
-// 		if n == 1 {
-// 		return 1
-// 		}
+		if n == 1 {
+		return 1
+		}
 
-// 		return fib(n-1) + fib(n-2)
-// 	}
+		return fib(n-1) + fib(n-2)
+	}
 
-// 	println(fib(30))`
+	println(fib(30))`
 
-// 	w := httptest.NewRecorder()
+	w := httptest.NewRecorder()
 
-// 	req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(input))
-// 	router.ServeHTTP(w, req)
+	req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(input))
+	router.ServeHTTP(w, req)
 
-// 	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusOK, w.Code)
 
-// 	var response Response
-// 	json.Unmarshal(w.Body.Bytes(), &response)
+	var response Response
+	json.Unmarshal(w.Body.Bytes(), &response)
 
-// 	assert.Equal(t, 0, response.Status)
-// 	assert.Empty(t, response.Errors)
-// }
+	assert.Equal(t, 0, response.Status)
+	assert.Empty(t, response.Errors)
+}

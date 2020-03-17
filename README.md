@@ -1,8 +1,12 @@
-# Risotto Play
+# Risotto Play 🍲
 
-Similar to [Go playground](https://play.golang.org/), but for a language nobody will really use: [Risotto](https://github.com/raphaelvigee/risotto)
+[api.play.risotto.dev](https://api.play.risotto.dev)
 
-This is just the API, the front-end for this will be hosted in another repository...
+Similar to [Go playground](https://play.golang.org/), but for a language nobody will really use: [Risotto](https://github.com/raphaelvigee/risotto).
+
+Play about with it on [play.risotto.dev](https://play.risotto.dev)
+
+This is just the API, the front-end is hosted in [risotto-play](https://github.com/jamesjarvis/risotto-play-ui), but you can just whack this api into any old front end if you so wish.
 
 ## Run tests
 
