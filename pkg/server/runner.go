@@ -34,7 +34,7 @@ type Server struct {
 // Then removes the local file
 // Then stores the output in the cache (in another goprocess to speed things up a little)
 // Then returns the output
-func (c *Server) RunCode(b []byte) (*Response, error) {
+func (s *Server) RunCode(b []byte) (*Response, error) {
 
 	// TODO: Check if it is in the cache
 
@@ -49,15 +49,12 @@ func (c *Server) RunCode(b []byte) (*Response, error) {
 	}
 
 	// Run the risotto file
-	response, err := c.RunRisotto(filename)
-	if err != nil {
-		return nil, err
-	}
+	response := s.RunRisotto(filename)
 
 	// Save to cache
 
 	// Delete the file
-	err = os.Remove(filename)
+	err := os.Remove(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +63,7 @@ func (c *Server) RunCode(b []byte) (*Response, error) {
 }
 
 // RunRisotto runs risotto
-func (s *Server) RunRisotto(filename string) (*Response, error) {
+func (s *Server) RunRisotto(filename string) *Response {
 	var stdOut bytes.Buffer
 	var stdErr bytes.Buffer
 
@@ -75,7 +72,11 @@ func (s *Server) RunRisotto(filename string) (*Response, error) {
 	cmd.Stderr = &stdErr
 
 	if err := cmd.Start(); err != nil {
-		return nil, err
+		return &Response{
+			Errors: err.Error(),
+			Output: "",
+			Status: -1,
+		}
 	}
 
 	// Wait for the process to finish or kill it after a timeout (whichever happens first):
@@ -86,21 +87,25 @@ func (s *Server) RunRisotto(filename string) (*Response, error) {
 	select {
 	case <-time.After(s.Timeout):
 		if err := cmd.Process.Kill(); err != nil {
-			return nil, err
+			return &Response{
+				Errors: err.Error(),
+				Output: "",
+				Status: -1,
+			}
 		}
 
 		return &Response{
 			Errors: fmt.Sprintf("Timeout limit of %v exceeded.\nCalm the hecc down pls I don't pay for a good cluster...", s.Timeout),
 			Output: "",
 			Status: -1,
-		}, nil
+		}
 	case _ = <-done:
 		status := cmd.ProcessState.ExitCode()
 		return &Response{
 			Errors: stdErr.String(),
 			Output: stdOut.String(),
 			Status: status,
-		}, nil
+		}
 	}
 }
 

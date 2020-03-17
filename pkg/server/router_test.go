@@ -14,7 +14,7 @@ import (
 
 func SetupServer() *gin.Engine {
 	s := &Server{
-		Timeout: 5 * time.Second,
+		Timeout: 1 * time.Second,
 	}
 
 	return s.SetupRouter()
@@ -71,6 +71,29 @@ func TestError(t *testing.T) {
 	assert.NotEmpty(t, response.Errors)
 }
 
+func TestTimeout(t *testing.T) {
+	router := SetupServer()
+
+	wtf := `
+	while true {
+		println("bitch")
+	}
+	`
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(wtf))
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	var response Response
+	json.Unmarshal(w.Body.Bytes(), &response)
+
+	assert.Empty(t, response.Output)
+	assert.Equal(t, -1, response.Status)
+	assert.NotEmpty(t, response.Errors)
+}
+
 func TestFibonacci(t *testing.T) {
 	router := SetupServer()
 
@@ -100,5 +123,6 @@ func TestFibonacci(t *testing.T) {
 	json.Unmarshal(w.Body.Bytes(), &response)
 
 	assert.Equal(t, 0, response.Status)
+	assert.Equal(t, "832040\n", response.Output)
 	assert.Empty(t, response.Errors)
 }
