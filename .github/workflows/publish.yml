@@ -12,7 +12,6 @@ jobs:
       - id: run-tests
         run: |
           docker run risotto-play-tester
-      - uses: actions/checkout@master
       - id: build
         uses: jerray/publish-docker-action@master
         with:
