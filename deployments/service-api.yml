@@ -13,31 +13,31 @@ spec:
   type: NodePort
 ---
 
-# apiVersion: networking.k8s.io/v1beta1
-# kind: Ingress
-# metadata:
-#   name: domain-ingress
-# spec:
-#   rules:
-#   - host: api.play.risotto.dev
-#     http:
-#       paths:
-#       - backend:
-#           serviceName: risotto-play
-#           servicePort: 80
-#   tls:
-#   - hosts:
-#     - api.play.risotto.dev
-#     secretName: testsecret-tls
-
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: basic-ingress
+  name: domain-ingress
 spec:
   rules:
-  - http:
+  - host: api.play.risotto.dev
+    http:
       paths:
       - backend:
           serviceName: risotto-play
-          servicePort: 8080
+          servicePort: 80
+  tls:
+  - hosts:
+    - api.play.risotto.dev
+    secretName: risottosecret-tls
+
+# apiVersion: networking.k8s.io/v1beta1
+# kind: Ingress
+# metadata:
+#   name: basic-ingress
+# spec:
+#   rules:
+#   - http:
+#       paths:
+#       - backend:
+#           serviceName: risotto-play
+#           servicePort: 8080
