@@ -14,7 +14,8 @@ import (
 
 func SetupServer() *gin.Engine {
 	s := &Server{
-		Timeout: 1 * time.Second,
+		Timeout:      1 * time.Second,
+		MaxPerSecond: 10,
 	}
 
 	return s.SetupRouter()
@@ -30,6 +31,41 @@ func TestPingRoute(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "pong", w.Body.String())
+}
+
+func TestCompileRateLimitOk(t *testing.T) {
+
+	router := SetupServer()
+
+	helloworld := `println("Hello, world!")`
+
+	for i := 0; i < 10; i++ {
+		w := httptest.NewRecorder()
+		req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(helloworld))
+		req.Header.Set("X-Real-IP", "2601:7:1c82:4097:59a0:a80b:2841:b8c8")
+		router.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusOK, w.Code)
+	}
+}
+
+func TestCompileRateLimitFail(t *testing.T) {
+
+	router := SetupServer()
+
+	helloworld := `for int:=0;i<100;i+=1{println("Hello, world!")}`
+
+	countratelimited := 0
+
+	for i := 0; i < 100; i++ {
+		w := httptest.NewRecorder()
+		req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(helloworld))
+		req.Header.Set("X-Real-IP", "2601:7:1c82:4097:59a0:a80b:2841:b8c8")
+		router.ServeHTTP(w, req)
+		if w.Code != http.StatusOK {
+			countratelimited++
+		}
+	}
+	assert.Equal(t, 90, countratelimited)
 }
 
 func TestHelloWorld(t *testing.T) {

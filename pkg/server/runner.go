@@ -24,7 +24,8 @@ type ServerError struct {
 
 // Server is the server config
 type Server struct {
-	Timeout time.Duration
+	Timeout      time.Duration
+	MaxPerSecond float64
 }
 
 // RunCode takes Risotto code as a string, then does the following:
