@@ -16,7 +16,7 @@ func (s *Server) SetupRouter() *gin.Engine {
 	r.Use(cors.Default())
 
 	// Hello there
-	r.GET("/", tollbooth_gin.LimitHandler(limiter), func(c *gin.Context) {
+	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, `░░░█▀░░░░░░░░░░░▀▀███████░░░░ 
 ░░█▌░░░░░░░░░░░░░░░▀██████░░░ 
 ░█▌░░░░░░░░░░░░░░░░███████▌░░ 

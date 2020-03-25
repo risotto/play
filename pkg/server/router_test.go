@@ -15,7 +15,7 @@ import (
 func SetupServer() *gin.Engine {
 	s := &Server{
 		Timeout:      1 * time.Second,
-		MaxPerSecond: 10,
+		MaxPerSecond: 5,
 	}
 
 	return s.SetupRouter()
@@ -39,7 +39,7 @@ func TestCompileRateLimitOk(t *testing.T) {
 
 	helloworld := `println("Hello, world!")`
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(helloworld))
 		req.Header.Set("X-Real-IP", "2601:7:1c82:4097:59a0:a80b:2841:b8c8")
@@ -52,11 +52,11 @@ func TestCompileRateLimitFail(t *testing.T) {
 
 	router := SetupServer()
 
-	helloworld := `for int:=0;i<100;i+=1{println("Hello, world!")}`
+	helloworld := `println("Hello, world!")`
 
 	countratelimited := 0
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 7; i++ {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("POST", "/compile", bytes.NewBufferString(helloworld))
 		req.Header.Set("X-Real-IP", "2601:7:1c82:4097:59a0:a80b:2841:b8c8")
@@ -65,7 +65,7 @@ func TestCompileRateLimitFail(t *testing.T) {
 			countratelimited++
 		}
 	}
-	assert.Equal(t, 90, countratelimited)
+	assert.Equal(t, 2, countratelimited)
 }
 
 func TestHelloWorld(t *testing.T) {

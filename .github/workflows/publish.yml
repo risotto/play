@@ -11,7 +11,14 @@ jobs:
           docker build --target tester -t risotto-play-tester .
       - id: run-tests
         run: |
-          docker run risotto-play-tester
+          docker run --rm -iv${PWD}:/host-volume risotto-play-tester
+      - name: Upload coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
+          name: codecov-umbrella
+          fail_ci_if_error: true
       - id: build
         uses: jerray/publish-docker-action@master
         with:

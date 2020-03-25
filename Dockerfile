@@ -27,7 +27,7 @@ FROM builder as tester
 
 COPY --from=raphaelvigee/risotto:latest /rst /usr/bin/rst
 
-CMD [ "go", "test", "/app/..." ]
+CMD ["go","test","-coverprofile=/host-volume/coverage.txt","-covermode=atomic","/app/..."]
 
 FROM debian as runner
 
