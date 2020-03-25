@@ -23,8 +23,11 @@ type ServerError struct {
 }
 
 // Server is the server config
+// Timeout is the timeout duration
+// SizeLimit is the payload capacity in bytes
 type Server struct {
-	Timeout time.Duration
+	Timeout   time.Duration
+	SizeLimit int64
 }
 
 // RunCode takes Risotto code as a string, then does the following:
