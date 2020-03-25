@@ -7,6 +7,8 @@ github.com/didip/tollbooth_gin v0.0.0-20170928041415-5752492be505 h1:VkJBA707rG0
 github.com/didip/tollbooth_gin v0.0.0-20170928041415-5752492be505/go.mod h1:ieayd+rxBVaj62fhAdF5p1U70Y4ZCcfpk0+4jesd0f8=
 github.com/gin-contrib/cors v1.3.0 h1:PolezCc89peu+NgkIWt9OB01Kbzt6IP0J/JvkG6xxlg=
 github.com/gin-contrib/cors v1.3.0/go.mod h1:artPvLlhkF7oG06nK8v3U8TNz6IeX+w1uzCSEId5/Vc=
+github.com/gin-contrib/size v0.0.0-20200226145816-24aa35f64b9f h1:Mhpqv2ldWYqT9fqcDpKR7UHHopVUnrTH5tyTk8+G3HY=
+github.com/gin-contrib/size v0.0.0-20200226145816-24aa35f64b9f/go.mod h1:S/t/oY4Bt+d87HWO1cz8v3o81+/D1UzntCVAekB82t0=
 github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3/go.mod h1:VJ0WA2NBN22VlZ2dKZQPAPnyWw5XTlK1KymzLKsr59s=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
