@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jamesjarvis/risotto-play/pkg/server"
 )
 
@@ -13,7 +14,11 @@ func main() {
 		SizeLimit:    10000,
 	}
 
-	r := s.SetupRouter()
+	gin.SetMode("release")
+	gr := gin.New()
+	gr.Use(gin.Logger(), gin.Recovery())
+
+	r := s.SetupRouter(gr)
 	// Listen and serve router on port 4000
 	r.Run(":4000")
 }

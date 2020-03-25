@@ -11,8 +11,7 @@ import (
 )
 
 // SetupRouter sets up the router
-func (s *Server) SetupRouter() *gin.Engine {
-	r := gin.Default()
+func (s *Server) SetupRouter(r *gin.Engine) *gin.Engine {
 	limiter := tollbooth.NewLimiter(s.MaxPerSecond, nil).SetIPLookups([]string{"X-Real-IP", "RemoteAddr", "X-Forwarded-For"})
 	r.Use(cors.Default(), limits.RequestSizeLimiter(s.SizeLimit))
 

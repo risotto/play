@@ -19,7 +19,11 @@ func SetupServer() *gin.Engine {
 		SizeLimit:    10000,
 	}
 
-	return s.SetupRouter()
+	r := gin.New()
+	r.Use(gin.Logger(), gin.Recovery())
+	gin.SetMode("test")
+
+	return s.SetupRouter(r)
 }
 
 func TestPingRoute(t *testing.T) {
