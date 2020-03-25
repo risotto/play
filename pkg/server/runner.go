@@ -114,7 +114,3 @@ func (s *Server) RunRisotto(filename string) *Response {
 		}
 	}
 }
-
-func getMillis(t *time.Time) int64 {
-	return t.UnixNano() / 1000000
-}
