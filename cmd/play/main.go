@@ -8,8 +8,9 @@ import (
 
 func main() {
 	s := &server.Server{
-		Timeout:   3 * time.Second,
-		SizeLimit: 10000,
+		Timeout:      3 * time.Second,
+		MaxPerSecond: 10,
+		SizeLimit:    10000,
 	}
 
 	r := s.SetupRouter()

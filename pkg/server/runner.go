@@ -26,8 +26,9 @@ type ServerError struct {
 // Timeout is the timeout duration
 // SizeLimit is the payload capacity in bytes
 type Server struct {
-	Timeout   time.Duration
-	SizeLimit int64
+	Timeout      time.Duration
+	MaxPerSecond float64
+	SizeLimit    int64
 }
 
 // RunCode takes Risotto code as a string, then does the following:
@@ -112,8 +113,4 @@ func (s *Server) RunRisotto(filename string) *Response {
 			Status: status,
 		}
 	}
-}
-
-func getMillis(t *time.Time) int64 {
-	return t.UnixNano() / 1000000
 }
