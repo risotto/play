@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jamesjarvis/risotto-play/pkg/server"
+	"github.com/risotto/play/pkg/server"
 )
 
 func main() {
