@@ -1,4 +1,4 @@
-module github.com/jamesjarvis/risotto-play
+module github.com/risotto/play
 
 go 1.13
 
