@@ -47,13 +47,13 @@ RUN go build -o api cmd/play/main.go
 
 FROM builder as tester
 
-COPY --from=rst /rst /usr/bin/rst
+COPY --from=raphaelvigee/risotto:latest /rst /usr/bin/rst
 
 CMD ["go","test","-coverprofile=/host-volume/coverage.txt","-covermode=atomic","/app/..."]
 
 FROM debian as runner
 
-COPY --from=rst /rst /usr/bin/rst
+COPY --from=raphaelvigee/risotto:latest /rst /usr/bin/rst
 COPY --from=builder /app/api .
 
 CMD ["./api"] 
