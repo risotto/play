@@ -12,7 +12,7 @@ jobs:
       - id: run-tests
         run: |
           docker run --rm -iv${PWD}:/host-volume risotto-play-tester
-      - name: Upload coverage to Codecov  
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -28,17 +28,17 @@ jobs:
           repository: jjhaslanded/risotto-play
           tags: latest,${{ github.run_id }}
           target: runner
-      - uses: azure/k8s-set-context@v1
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' # Only deploy from master branch
+    needs: [publish-api]
+    env:
+      COMPOSE_PROJECT_NAME: risotto_play_api
+      DOCKER_HOST: ${{ secrets.DOCKER_HOST }}
+    steps:
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.4.0
         with:
-          method: kubeconfig
-          kubeconfig: ${{secrets.KUBECONFIG}} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
-        id: setcontext
-      - uses: Azure/k8s-deploy@v1
-        if: github.ref == 'refs/heads/master' # Only deploy from master branch
-        with:
-          namespace: 'jamesjarvis'
-          manifests: |
-            deployments/deployment-api.yml
-            deployments/service-api.yml
-          images: "jjhaslanded/risotto-play:${{ github.run_id }}"
-          kubectl-version: "latest"
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - name: Build & Deploy
+        run: PORT=5000 TAG="${{ github.run_id }}" docker-compose --compatibility up --build -d

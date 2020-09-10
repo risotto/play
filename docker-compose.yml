@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  api:
+    image: jjhaslanded/risotto-play:${TAG:-latest}
+    build: .
+    ports:
+      - "${PORT:-40}:4000"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M

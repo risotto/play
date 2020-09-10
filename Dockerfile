@@ -1,6 +1,28 @@
   
 # Dockerfile References: https://docs.docker.com/engine/reference/builder/
 
+# Some bull
+# FROM gcc:7 AS env
+
+# RUN git clone --recurse-submodules -j8 https://github.com/risotto/risotto.git
+
+# RUN apt-get update && apt-get -y install cmake
+
+# WORKDIR /risotto
+
+# RUN ls -lah
+
+# FROM env as rst-builder
+# RUN cmake -DCMAKE_BUILD_TYPE=Release -H. -Bbuild
+
+# FROM rst-builder as builder-rst
+
+# RUN cmake --build build --target rst
+
+# FROM debian:buster AS rst
+# COPY --from=builder-rst /risotto/build/rst .
+# ENTRYPOINT ["/rst"]
+
 # Start from the latest golang base image
 FROM golang:1.13 as builder
 
