@@ -36,6 +36,7 @@ jobs:
       COMPOSE_PROJECT_NAME: risotto_play_api
       DOCKER_HOST: ${{ secrets.DOCKER_HOST }}
     steps:
+      - uses: actions/checkout@master
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.4.0
         with:
