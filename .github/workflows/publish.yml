@@ -35,6 +35,7 @@ jobs:
     env:
       COMPOSE_PROJECT_NAME: risotto_play_api
       DOCKER_HOST: ${{ secrets.DOCKER_HOST }}
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
       - uses: actions/checkout@master
       - name: Install SSH key
