@@ -3,12 +3,24 @@ package server
 import (
 	"net/http"
 
-	"github.com/didip/tollbooth"
-	"github.com/didip/tollbooth_gin"
+	"github.com/didip/tollbooth/v6"
+	"github.com/didip/tollbooth/v6/limiter"
 	"github.com/gin-contrib/cors"
 	limits "github.com/gin-contrib/size"
 	"github.com/gin-gonic/gin"
 )
+
+func LimitHandler(lmt *limiter.Limiter) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		httpError := tollbooth.LimitByRequest(lmt, c.Writer, c.Request)
+		if httpError != nil {
+			c.Data(httpError.StatusCode, lmt.GetMessageContentType(), []byte(httpError.Message))
+			c.Abort()
+		} else {
+			c.Next()
+		}
+	}
+}
 
 // SetupRouter sets up the router
 func (s *Server) SetupRouter(r *gin.Engine) *gin.Engine {
@@ -57,7 +69,7 @@ func (s *Server) SetupRouter(r *gin.Engine) *gin.Engine {
 	})
 
 	// Submit Risotto code to the server
-	r.POST("/compile", tollbooth_gin.LimitHandler(limiter), func(c *gin.Context) {
+	r.POST("/compile", LimitHandler(limiter), func(c *gin.Context) {
 		// Retrieve the text from the message, and then just straight up run the code I guess?
 		rawData, err := c.GetRawData()
 		if err != nil {
