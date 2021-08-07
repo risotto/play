@@ -43,7 +43,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o api cmd/play/main.go
+RUN go build -o api main.go
 
 FROM builder as tester
 
