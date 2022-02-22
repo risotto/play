@@ -1,8 +1,8 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/didip/tollbooth/v6 v6.1.1 h1:Nt7PvWLa9Y94OrykXsFNBinVRQIu8xdy4avpl99Dc1M=
-github.com/didip/tollbooth/v6 v6.1.1/go.mod h1:xjcse6CTHCLuOkzsWrEgdy9WPJFv+p/x6v+MyfP+O9s=
+github.com/didip/tollbooth/v6 v6.1.2 h1:Kdqxmqw9YTv0uKajBUiWQg+GURL/k4vy9gmLCL01PjQ=
+github.com/didip/tollbooth/v6 v6.1.2/go.mod h1:xjcse6CTHCLuOkzsWrEgdy9WPJFv+p/x6v+MyfP+O9s=
 github.com/gin-contrib/cors v1.3.1 h1:doAsuITavI4IOcd0Y19U4B+O0dNWihRyX//nn4sEmgA=
 github.com/gin-contrib/cors v1.3.1/go.mod h1:jjEJ4268OPZUcU7k9Pm653S7lXUGcqMADzFA61xsmDk=
 github.com/gin-contrib/size v0.0.0-20210429000130-f8b4345c9ddf h1:+R8qtw9IBeGWm60+pcFOXhWGqi23YeBlZ/QdqchmoAE=

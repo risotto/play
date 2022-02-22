@@ -3,7 +3,7 @@ module github.com/risotto/play
 go 1.13
 
 require (
-	github.com/didip/tollbooth/v6 v6.1.1
+	github.com/didip/tollbooth/v6 v6.1.2
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/size v0.0.0-20210429000130-f8b4345c9ddf
 	github.com/gin-gonic/gin v1.7.3
